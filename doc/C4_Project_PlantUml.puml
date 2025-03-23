@@ -1,0 +1,47 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+' LAYOUT_WITH_LEGEND()
+
+title Интеграция 1С:ТОИР  1С:MDM 
+
+
+' Системы
+System_Boundary(TOIR, "1C:ТОИР") {
+    Container(НСИ_TOIR, "Нормативно-справочная информация", "")
+    Component(СправочникНоменклатура_TOIR, "Справочник Номенклатура",, "")
+    Container(DOC_TOIR, "Документы", "")
+    Component(ДокументЗявка_TOIR, "Документ Заявка в службу НСИ",, "")
+    
+}
+
+System_Boundary(MDM, "1C:MDM") {
+    Container(НСИ_MDM, "Нормативно-справочная информация", "")
+    Container(DOC_MDM, "Документы", "")
+    Component(СправочникНоменклатура_MDM, "Справочник Номенклатура", , "")
+    Component(ДокументЗявка_MDM, "Документ Заявка в службу НСИ",, "")
+}
+
+System_Ext(ШинаДанных, "Шина данных")  
+
+' Связи
+Rel(СправочникНоменклатура_MDM, ШинаДанных, "Данные по номенклатуре", "Брокер")
+Rel(ШинаДанных, СправочникНоменклатура_TOIR, "Данные по номенклатуре", "Брокер")
+Rel(ДокументЗявка_TOIR, ШинаДанных, "Документ заявка в НСИ", "Брокер")
+Rel_Right(ШинаДанных, ДокументЗявка_MDM, "Документ заявка в НСИ", "Брокер")
+Rel(ШинаДанных, ДокументЗявка_TOIR, "Документ заявка в НСИ", "Брокер")
+Rel_R(ДокументЗявка_MDM, ШинаДанных, "Документ заявка в НСИ", "Брокер")
+
+Rel_Up(НСИ_TOIR, СправочникНоменклатура_TOIR,"","")
+Rel_Up(DOC_TOIR, ДокументЗявка_TOIR,"","")
+Rel_Up(DOC_MDM, ДокументЗявка_MDM,"","")
+Rel_Up(НСИ_MDM, СправочникНоменклатура_MDM,"","")
+
+
+
+' Расположение
+Lay_U(НСИ_MDM, СправочникНоменклатура_MDM)
+
+@enduml
